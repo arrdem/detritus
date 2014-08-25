@@ -13,7 +13,7 @@
     (-> 1 inc inc dec
        (->assert number? \"oh god the types\"))"
   ([v pred]
-     (->ensure v pred "->assert failed!"))
+     (->assert v pred "->assert failed!"))
 
   ([v pred error]
      (if (pred v) v
@@ -33,7 +33,7 @@
     (->> 1 inc inc dec
       (->>assert number? \"oh god the types\"))"
   ([pred v]
-     (->>ensure pred "->>assert failed!" v))
+     (->>assert pred "->>assert failed!" v))
 
   ([pred error v]
      (if (pred v) v
