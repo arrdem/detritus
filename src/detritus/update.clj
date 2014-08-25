@@ -1,4 +1,6 @@
-(ns detritus.update)
+(ns detritus.update
+  "A collection of helper functions useful for updating and
+  conditionally updating datastructures.")
 
 (defn map-vals
   "λ {A → B} → (λ B → more* → C) → more* → {A → C}
@@ -7,8 +9,8 @@
   keys of m to (apply f (get m k) args)."
   [m f & args]
   (->> (for [[k v] m]
-         [k (apply f v args)])
-       (into {})))
+       [k (apply f v args)])
+     (into {})))
 
 
 (defn fix
