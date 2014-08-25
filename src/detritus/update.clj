@@ -32,3 +32,31 @@
   [map key f & args]
   (assoc map key
          (apply f (get map key) args)))
+
+
+(defn ->when-update
+  "Function of a value, a predicate, an updater and optional
+  varargs. If the predicate is true of the value, returns (apply f x
+  args), otherwise returns x.
+
+  Example:
+    (-> 1 (->when-update #(<= 0 %) inc))"
+  [x pred f & args]
+  (if (pred x)
+    (apply f x args)
+    x))
+
+
+(defn ->>when-update
+  "Function of a predicate, an updater, optional varargs and a
+  value. If the predicate is true of the value, returns (apply f x
+  args), otherwise returns x.
+
+  Example:
+    (->> 1 (->>when-update #(<= 0 %) inc))"
+  [pred f & args]
+  (let [x    (last args)
+        args (butlast args)]
+    (if (pred x)
+      (apply f x args)
+      x)))

@@ -38,10 +38,3 @@
   ([pred error v]
      (if (pred v) v
          (assert false error))))
-
-
-(defn maybe-fix [pred resolution]
-  (fn [x]
-    (if-not (pred x)
-      (resolution x)
-      x)))
