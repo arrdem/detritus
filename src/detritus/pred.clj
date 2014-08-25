@@ -39,6 +39,11 @@
   ([pred error v]
      (if (pred v) v
          (assert false error))))
+
+
+(def ! complement)
+
+
 ;; Missing type predicates
 ;;--------------------------------------------------------------------
 
