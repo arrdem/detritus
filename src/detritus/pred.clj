@@ -38,3 +38,18 @@
   ([pred error v]
      (if (pred v) v
          (assert false error))))
+;; Missing type predicates
+;;--------------------------------------------------------------------
+
+(defn seqable? [x]
+  (or (instance? clojure.lang.ISeq x)
+     (instance? clojure.lang.Seqable x)
+     (instance? Iterable x)
+     (instance? CharSequence x)
+     (instance? java.util.Map x)
+     (nil? x)
+     (.. x getClass isArray)))
+
+
+(defn atom? [x]
+  (instance? clojure.lang.Atom x))
