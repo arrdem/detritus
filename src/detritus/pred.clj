@@ -1,4 +1,5 @@
-(ns detritus.pred)
+(ns detritus.pred
+  "A collection of predicates and predicate helpers.")
 
 (defn ->assert
   "(λ T → ((λ T) → Bool)) → T
