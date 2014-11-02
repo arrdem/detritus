@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+ORIGIN=$2
+BRANCH=$3
+
+. "$HOOKS_DIR/modules/git-deploy.sh"
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+. "$HOOKS_DIR/modules/lein-deploy.sh"
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+exit 0
