@@ -4,8 +4,7 @@
 
   Note that the API here is likely very volatile and subject to
   change due to being bare bones to the point of trivial."
-  (:require [detritus.text :as text])
-  (:require [detritus.pred :refer [maybe-fix]]))
+  (:require [detritus.text :as text]))
 
 
 ;; Logging levels
