@@ -16,6 +16,8 @@
        [k (apply f v args)])
      (into {})))
 
+(defn map-entry [x y]
+  [x y])
 
 (defn map-keys
   "Create a new map from m by calling function f on each key to get a
@@ -26,7 +28,6 @@
           (for [[k v] m]
             (map-entry (apply f k args) v)))))
 
-
 (defn map-vals-with-keys
   "Create a new map from m by calling function f, with two
   arguments (the key and value) to get a new value."
@@ -36,7 +37,6 @@
           (for [[k v] m]
             (map-entry k (apply f k v args))))))
 
-
 (defn map-keys-and-vals
   "Create a new map from m by calling function f on each key & each
   value to get a new key & value"
@@ -45,7 +45,6 @@
     (into {}
           (for [[k v] m]
             (map-entry (apply f k args) (apply f v args))))))
-
 
 (defn fix
   "λ (fn T → T) → T → T
@@ -59,7 +58,6 @@
       dat
       (recur f dat'))))
 
-
 (defn update
   "λ {A → B} → A → (λ B → args* → C) → args* → {A → C}
 
@@ -68,7 +66,6 @@
   [map key f & args]
   (assoc map key
          (apply f (get map key) args)))
-
 
 ;; Conditional update operations
 ;;--------------------------------------------------------------------
@@ -84,7 +81,6 @@
   (if (pred x)
     (apply f x args)
     x))
-
 
 (defn ->>when-update
   "Function of a predicate, an updater, optional varargs and a
