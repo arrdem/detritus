@@ -1,6 +1,5 @@
 (ns detritus.string)
 
-
 (defn re-fn
   "Construct a regular expression from string.  Calling a regular
   expression with no arguments returns a Pattern.  Calling a regular
