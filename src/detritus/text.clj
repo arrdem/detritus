@@ -179,3 +179,44 @@
   [text]
   (map text->paragraph
        (c.s/split text #"\n\r?\s*\n\r?")))
+
+;; API for manipulating text ASTs
+;;--------------------------------------------------------------------
+
+(defn unindent
+  "Helper which attempts to rewrite a tree to remove `indent` levels
+  of indentation. Note that negative indentation is not supported."
+  [[op {width :width :as meta} & children :as text] indent]
+  (if (and (= op :indent) width)
+    (if (>= indent width)
+      children
+      `[:indent {:width ~(- width indent)} ~@children])
+    text))
+
+(defn lift-indentation
+  "Helper which attempts to rewrite a given node so that it reflects
+  the indentation of its children.
+
+  Ex. [:block {} [:indent {} \"foo\"]] -> [:indent {} [:block {} \"foo\"]]"
+  [[op meta & children :as text]]
+  (let [children     (map #(if (vector? %1)
+                             (lift-indentation %1)
+                             %1)
+                          children)
+        indentations (->> children
+                          (map (comp :width second))
+                          (filter identity))]
+    (if-not (empty? indentations)
+      (let [mindent (apply min indentations)]
+        `[:indent {:width ~mindent}
+          ~@(map #(unindent %1 mindent) children)])
+      text)))
+
+(defn ensure-indent
+  "Helper which ensures that the argument text is indented at least by
+  width. Attempts to give a minimal indentation rather than simply
+  indenting the text to width."
+  [text width]
+  (-> text
+      lift-indentation
+      (assoc-in [1 :width] width)))
