@@ -2,20 +2,16 @@
   (:require [detritus.macros :refer [-<>]])
   (:require [clojure.string :as c.s]))
 
-
 (defn words [text]
   (c.s/split text #"\s+"))
 
-
 (defn lines [text]
   (c.s/split text #"(\n\r?)+"))
-
 
 (defn trailing-newline?
   [text]
   {:pre [(string? text)]}
   (= \newline (last text)))
-
 
 (defn ensure-trailing-newline
   [text]
@@ -23,13 +19,11 @@
     (str text \newline)
     text))
 
-
 (defn prefix-lines [prefix text]
   (-<> (lines text)
        (map str (repeat prefix) <>)
        (interpose \newline <>)
        (apply str <>)))
-
 
 (defn wrap-lines
   "(λ Num → String) → String
@@ -71,40 +65,34 @@
         true
         ,,:str))
 
-
 (defmulti render
   render-dispatch)
-
 
 (defmethod render :seq
   [forms]
   (->> forms
-     (map render)
-     (apply str)))
-
+       (map render)
+       (apply str)))
 
 (defmethod render :str
   [& xs]
   (->> xs
-     (map str)
-     (apply str)))
-
+       (map str)
+       (apply str)))
 
 (defmethod render :indent
   [[_ {width :width
        :or {width 2}
        :as opts} & text]]
   (->> text
-     (map render)
-     (apply str)
-     (prefix-lines (apply str (repeat width \space)))))
-
+       (map render)
+       (apply str)
+       (prefix-lines (apply str (repeat width \space)))))
 
 (defmethod render :prefix
   [[_ {prefix :prefix :as opts} & text]]
   (->> text
-     (prefix-lines prefix)))
-
+       (prefix-lines prefix)))
 
 (defmethod render :wrap
   [[_ {width :width
@@ -119,12 +107,10 @@
        (interpose "\n" <>)
        (apply str <>)))
 
-
 (defmethod render :heading
   [[_ opts & text]]
   (str (apply str text) "\n"
        (str (apply str (repeat 80 \-)) \newline)))
-
 
 (defmethod render :code
   [[_ {lang :lang :as opts} & text]]
@@ -135,7 +121,6 @@
             <> \newline
             "```" \newline)
        (ensure-trailing-newline <>)))
-
 
 (defmethod render :block
   [[_ opts & text]]
@@ -152,9 +137,8 @@
   (let [indent (re-find #"\s\s+" text)]
     (if indent
       [:indent {:width (count indent)}
-       (c.s/replace text (re-pattern indent) "")]
+       (c.s/replace text (re-pattern indent) " ")]
       [:str {} text])))
-
 
 (defn text->paragraph
   [text]
@@ -165,10 +149,9 @@
        (:indent)
        ,,[:indent w
           [:wrap {} text]]
-       
+
        (:str)
        ,,[:wrap {} text])]))
-  
 
 (defn text->paragraphs
   "(λ String) → (Seq String)
