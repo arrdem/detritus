@@ -18,7 +18,7 @@
                                    (name vname))
         ?attr-map         (assoc ?attr-map
                                  :variant true
-                                 :members kw-members
-                                 :tag kw-tag)]
+                                 :variant/members kw-members
+                                 :variant/tag kw-tag)]
     `(defn ~vname ~?docstring ~?attr-map ~members
        [~kw-tag (hash-map ~@(interleave kw-members members))])))
