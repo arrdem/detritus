@@ -95,3 +95,15 @@
     (if (pred x)
       (apply f x args)
       x)))
+
+(defn take-when
+  "Helper useful for parsing regular function argument seqeunces. If a predicate
+  is satisfied, returns a pair [(first col), (rest col)] otherwise returns the pair
+  [empty, col].
+
+  Ex. (let [[?docstring args] (take-when string? \"\" args)
+            [?attr-map  args] (take-when map? {} args)]
+        ..)"
+  [f empty col]
+  (let [[x & rest] col]
+    (if (f x) [x rest] [empty col])))
