@@ -111,11 +111,15 @@
                                  :tag/members  kw-members
                                  :tag/tag      kw-tag)]
     `(do (def ~vname
+           ~?docstring
            (quote ~(merge ?attr-map ?pre-map)))
-         (defn ~(symbol (str "->" (name vname))) ~?docstring ~?attr-map ~members
+         (defn ~(symbol (str "->" (name vname)))
+           ~(str "Generated constructor for the " ~vname " type.")
+           ~?attr-map ~members
            ~?pre-map
            (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
          (defn ~(symbol (str (name vname) "?"))
+           ~(str "Generated predicate for the " ~vname " type.")
            ([x#]
             (and (tagged? x#)
                  (= ~kw-tag (tag x#))
