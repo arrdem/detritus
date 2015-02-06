@@ -66,12 +66,30 @@
     (-val x)))
 
 (defmacro deftag
-  "Defines a tagged value constructor with a namespace qualified keyword tag,
-  and a body map with keyword named members. Preconditions on members may be
+  "Generates a tagged value smart constructor `->T` where T is the name of the
+  tag. The constructor accepts an arglist identical to the list of members and
+  returns an instance of ATaggedVal with the defined tag and a map constructed
+  from keywordized member names to given values. Preconditions on members may be
   specified by the pre-map as for clojure.core/defn.
 
-  Ex. (deftag test \"A demo variant\" [a b]
-        {:pre [(number? a) (vector? b)]})"
+  Also generates a predicate `T?` where T is the name of the tag. The predicate
+  will return true if and only if the argument value is `tagged?`, an instance
+  of the given tag type, and satisfies the `:pre` conditions in the tag
+  constructor if any.
+
+  Ex. => (deftag test \"A demo variant\" [a b]
+      =>   {:pre [(number? a) (vector? b)]})
+      nil
+      => (->test 1 [1])
+      (:user/test {:a 1 :b [1]})
+      => (test? (->test 1 [1]))
+      true
+      => (tagged? (->test 1 [1]))
+      true
+      => (tag (->test 1 [1]))
+      :user/test
+      => (val (->test 1 [1]))
+      {:a 1 b [1]}"
   {:arglists '([name doc-string? attr-map? members pre-map?])}
   [vname & args]
   (let [;; Parse direct args
@@ -92,16 +110,17 @@
                                  :variants/tag true
                                  :tag/members  kw-members
                                  :tag/tag      kw-tag)]
-    `(do (defn ~vname ~?docstring ~?attr-map ~members
+    `(do (defn ~(symbol (str "->" (name vname))) ~?docstring ~?attr-map ~members
            ~?pre-map
-           [~kw-tag (hash-map ~@(interleave kw-members members))])
+           (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
          (defn ~(symbol (str (name vname) "?"))
            ([x#]
-            (and (vector? x#)
-                 (= 2 (count x#))
-                 (= ~kw-tag (first x#))
-                 (or (map? (second x#))
-                     (nil? (second x#))))))
+            (and (tagged? x#)
+                 (= ~kw-tag (tag x#))
+                 (or (map? (val x#))
+                     (nil? (val x#)))
+                 (let [[_ {:keys ~members}] x#]
+                   (and ~@(:pre ?pre-map))))))
          nil)))
 
 (defmacro defvariant
