@@ -31,6 +31,13 @@
     `(do (defn ~vname ~?docstring ~?attr-map ~members
            ~?pre-map
            [~kw-tag (hash-map ~@(interleave kw-members members))])
+         (defn ~(symbol (str (name vname) "?"))
+           ([x#]
+            (and (vector? x#)
+                 (= 2 (count x#))
+                 (= ~kw-tag (first x#))
+                 (or (map? (second x#))
+                     (nil? (second x#))))))
          nil)))
 
 (defmacro defvariant
