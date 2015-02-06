@@ -114,7 +114,7 @@
            ~?docstring
            (quote ~(merge ?attr-map ?pre-map)))
          (defn ~(symbol (str "->" (name vname)))
-           ~(str "Generated constructor for the " ~vname " type.")
+           ~(str "Generated constructor for the " vname " type.")
            ~?attr-map ~members
            ~?pre-map
            (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
