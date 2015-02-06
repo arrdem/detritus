@@ -1,6 +1,70 @@
 (ns detritus.variants
   (:require [detritus.update :refer [take-when]]))
 
+(defprotocol ITaggedVal
+  (-tag [_])
+  (-val [_]))
+
+(deftype ATaggedVal [t v]
+  ITaggedVal
+  (-tag [self]
+    (.t self))
+  (-val [self]
+    (.v self))
+
+  clojure.lang.Indexed
+  (nth [self i] (nth self i nil))
+  (nth [self i o]
+    (case i
+      (0)      (.t self)
+      (1)      (.v self)
+      o))
+  
+  clojure.lang.ISeq
+  (next [this] (seq this))
+  (first [this] (.t this))
+  (count [this] 2)
+  (equiv [this obj] (= (seq this) (seq obj)))
+  (seq [self]
+    (cons (.t self)
+          (cons (.v self)
+                nil)))
+
+  clojure.lang.Associative
+  (entryAt [self key]
+    (.entryAt (.v self) key))
+  (assoc [self k v]
+    (ATaggedVal. (.t self)
+                 (.assoc (.v self) k v)))
+
+  clojure.lang.ILookup
+  (valAt [self k]
+    (.valAt (.v self) k))
+  (valAt [self k o]
+    (.valAt (.v self) k o)))
+
+(defn tagged?
+  "Predicate indicating whether the argument value is a tagged value or
+  not. Returns true if and only if the argument is all of #{ITaggedVal, Indexed,
+  ISeq}."
+  [x]
+  (and (satisfies? ITaggedVal x)
+       (instance?  clojure.lang.Indexed x)
+       (instance?  clojure.lang.ISeq x)))
+
+(defn tag
+  "Returns the tag on a tagged value, returning nil if the value is not tagged."
+  [x]
+  (when (tagged? x)
+    (-tag x)))
+
+(defn val
+  "Returns the value of a tagged value, returning nil if the value is not
+  tagged."
+  [x]
+  (when (tagged? x)
+    (-val x)))
+
 (defmacro deftag
   "Defines a tagged value constructor with a namespace qualified keyword tag,
   and a body map with keyword named members. Preconditions on members may be
