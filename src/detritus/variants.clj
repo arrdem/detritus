@@ -128,3 +128,7 @@
                  (let [[_ {:keys ~members}] x#]
                    (and ~@(:pre ?pre-map))))))
          nil)))
+
+;; FIXME: def closed variant?
+;; FIXME: def open variant?
+;; FIXME: variant dispatch?
