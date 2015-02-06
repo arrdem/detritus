@@ -110,7 +110,9 @@
                                  :variants/tag true
                                  :tag/members  kw-members
                                  :tag/tag      kw-tag)]
-    `(do (defn ~(symbol (str "->" (name vname))) ~?docstring ~?attr-map ~members
+    `(do (def ~vname
+           (quote ~(merge ?attr-map ?pre-map)))
+         (defn ~(symbol (str "->" (name vname))) ~?docstring ~?attr-map ~members
            ~?pre-map
            (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
          (defn ~(symbol (str (name vname) "?"))
