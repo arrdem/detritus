@@ -119,7 +119,7 @@
            ~?pre-map
            (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
          (defn ~(symbol (str (name vname) "?"))
-           ~(str "Generated predicate for the " ~vname " type.")
+           ~(str "Generated predicate for the " vname " type.")
            ([x#]
             (and (tagged? x#)
                  (= ~kw-tag (tag x#))
