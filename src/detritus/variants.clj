@@ -78,7 +78,7 @@
   constructor if any.
 
   Ex. => (deftag test \"A demo variant\" [a b]
-      =>   {:pre [(number? a) (vector? b)]})
+           {:pre [(number? a) (vector? b)]})
       nil
       => (->test 1 [1])
       (:user/test {:a 1 :b [1]})
