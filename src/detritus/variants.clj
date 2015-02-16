@@ -1,4 +1,5 @@
 (ns detritus.variants
+  (:refer-clojure :exclude [val])
   (:require [detritus.update :refer [take-when]]))
 
 (defprotocol ITaggedVal
