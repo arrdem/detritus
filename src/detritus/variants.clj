@@ -107,18 +107,21 @@
         kw-members        (mapv (comp keyword name) members)
         kw-tag            (keyword (name (ns-name *ns*))
                                    (name vname))
-        ?attr-map         (assoc ?attr-map
-                                 :variants/tag true
-                                 :tag/members  kw-members
-                                 :tag/tag      kw-tag)]
-    `(do (def ~vname
-           ~?docstring
-           (quote ~(merge ?attr-map ?pre-map)))
-         (defn ~(symbol (str "->" (name vname)))
+        ?attr-map         (merge ?attr-map
+                                 ?pre-map
+                                 (when ?docstring
+                                   {:doc ?docstring}))]
+    `(do (defn ~(symbol (str "->" (name vname)))
            ~(str "Generated constructor for the " vname " type.")
-           ~?attr-map ~members
+           ~members
            ~?pre-map
            (->ATaggedVal ~kw-tag (hash-map ~@(interleave kw-members members))))
+         (def ~vname
+           ~?docstring
+           (detritus.variants/->TagDescriptor
+            ,,(quote ~?attr-map)
+            ,,(quote ~kw-members)
+            ,,(quote ~kw-tag)))
          (defn ~(symbol (str (name vname) "?"))
            ~(str "Generated predicate for the " vname " type.")
            ([x#]
@@ -129,6 +132,8 @@
                  (let [[_ {:keys ~members}] x#]
                    (and ~@(:pre ?pre-map))))))
          nil)))
+
+(deftag TagDescriptor [attrs members tag])
 
 ;; FIXME: def closed variant?
 ;; FIXME: def open variant?
