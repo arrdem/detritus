@@ -1,5 +1,6 @@
 (ns detritus.pred
-  "A collection of predicates and predicate helpers.")
+  "A collection of predicates and predicate helpers."
+  (:require [detritus.types :as t]))
 
 (defn ->assert
   "(λ T → ((λ T) → Bool)) → T
@@ -14,12 +15,11 @@
     (-> 1 inc inc dec
        (->assert number? \"oh god the types\"))"
   ([v pred]
-     (->assert v pred "->assert failed!"))
+   (->assert v pred "->assert failed!"))
 
   ([v pred error]
-     (if (pred v) v
-         (assert false error))))
-
+   (if (pred v) v
+       (assert false error))))
 
 (defn ->>assert
   "(λ ((λ T) → Bool) → T) → T
@@ -34,15 +34,13 @@
     (->> 1 inc inc dec
       (->>assert number? \"oh god the types\"))"
   ([pred v]
-     (->>assert pred "->>assert failed!" v))
+   (->>assert pred "->>assert failed!" v))
 
   ([pred error v]
-     (if (pred v) v
-         (assert false error))))
-
+   (if (pred v) v
+       (assert false error))))
 
 (def ! complement)
-
 
 ;; Missing type predicates
 ;;--------------------------------------------------------------------
