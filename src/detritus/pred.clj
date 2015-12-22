@@ -47,14 +47,16 @@
 ;; Missing type predicates
 ;;--------------------------------------------------------------------
 
-(defn seqable? [x]
-  (or (instance? clojure.lang.ISeq x)
-      (instance? clojure.lang.Seqable x)
-      (instance? Iterable x)
-      (instance? CharSequence x)
-      (instance? java.util.Map x)
-      (nil? x)
-      (.. x getClass isArray)))
+(defn seqable?
+  {:depricated  "0.3.1"
+   :replaced-by t/seqable?}
+  [x]
+  (.write *err* "Calling deprecated detritus.pred/seqable?\n")
+  (t/seqable? x))
 
-(defn atom? [x]
-  (instance? clojure.lang.Atom x))
+(defn atom?
+  {:depricated  "0.3.1"
+   :replaced-by t/atom?}
+  [x]
+  (.write *err* "Calling deprecated detritus.pred/atom?\n")
+  (t/atom? x))
