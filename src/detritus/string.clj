@@ -26,5 +26,4 @@
       ([s] (let [groups (re-seq pp s)]
              (if (first groups)
                groups
-               nil)))))) 
-
+               nil))))))
