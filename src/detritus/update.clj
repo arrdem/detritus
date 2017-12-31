@@ -99,6 +99,22 @@
   (let [[x & rest] col]
     (if (f x) [x rest] [empty col])))
 
+(defn lazy-group-by-p [pred coll]
+  ((juxt (partial filter pred)
+         (partial filter (complement pred)))
+   coll))
+
+(defn group-by-p [pred coll]
+  (loop [[head & tail] coll
+         t             []
+         f             []]
+    (let [[t* f*] (if (pred head)
+                    [(conj t head) f]
+                    [t (conj f head)])]
+      (if tail
+        (recur tail t* f*)
+        [t* f*]))))
+
 (defn deep-merge
   ""
   [v & vs]

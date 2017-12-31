@@ -1,14 +1,13 @@
-(ns detritus.types)
+(ns detritus.types
+  (:refer-clojure :exclude [map-entry?]))
 
 ;; Concrete type predicates
 ;;--------------------------------------------------------------------
 (defn atom? [x]
   (instance? clojure.lang.Atom x))
 
-(defn map-entry? [x]
-  (or (instance? clojure.lang.MapEntry x)
-      (and (vector? x)
-           (= 2 (count x)))))
+(defn ^:deprecated map-entry? [x]
+  (clojure.core/map-entry? x))
 
 (defn lazy-seq? [x]
   (instance? clojure.lang.LazySeq x))
@@ -18,6 +17,9 @@
 
 (defn uuid? [x]
   (instance? java.util.UUID x))
+
+(defn uri? [x]
+  (instance? java.net.URI x))
 
 (defn boolean? [x]
   (instance? java.lang.Boolean x))
@@ -31,6 +33,9 @@
 (defn big-int? [x]
   (or (instance? java.math.BigInteger x)
       (instance? clojure.lang.BigInt x)))
+
+(defn file? [x]
+  (instance? java.io.File x))
 
 ;; Interface predicates
 ;;--------------------------------------------------------------------
