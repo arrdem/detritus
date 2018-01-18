@@ -2,31 +2,54 @@
   "A collection of helper functions useful for updating and
   conditionally updating datastructures.")
 
-
 ;; Mapping update operations
 ;;--------------------------------------------------------------------
-
-(defn map-vals
-  "λ {A → B} → (λ B → more* → C) → more* → {A → C}
-
-  Computes a new map from m preserving the keys of m, but mapping the
-  keys of m to (apply f (get m k) args)."
-  [m f & args]
-  (->> (for [[k v] m]
-       [k (apply f v args)])
-     (into {})))
 
 (defn map-entry [x y]
   [x y])
 
-(defn map-keys
-  "Create a new map from m by calling function f on each key to get a
-  new key."
+(defn update-domain
+  "Transforms a mapping (function) by applying the given transformation
+  to all the elements of the domain, returning a new mapping m' such
+  that ∀k→v∈m, (f k & args)→v∈m'."
   [m f & args]
-  (when m
-    (into {}
-          (for [[k v] m]
-            (map-entry (apply f k args) v)))))
+  (some->> m
+           (map (fn [[k v]] [(apply f k args) v]))
+           (into {})))
+
+(def ^{:deprecated true
+       :replaced-by #'update-domain
+       :doc "Colloquial term for transforming the domain."} update-keys
+  update-domain)
+
+(def ^{:deprecated true
+       :replaced-by #'update-domain
+       :doc "Colloquial term for transforming the domain."} map-keys
+  update-domain)
+
+(defn update-codomain
+  "Transforms a mapping (function) by applying the given transformation
+  to all the elements of the codomain, returning a new mapping m' such
+  that ∀k→v∈m, k→(f v & args)∈m'."
+  [m f & args]
+  (some->> m
+           (map (fn [[k v]] [k (apply f v args)]))
+           (into {})))
+
+(def ^{:deprecated true
+       :replaced-by #'update-codomain
+       :doc "Colloquial term for transforming the codomain."} update-range
+  update-codomain)
+
+(def ^{:deprecated true
+       :replaced-by #'update-domain
+       :doc "Colloquial term for transforming the codomain."} map-vals
+  update-codomain)
+
+(def ^{:deprecated true
+       :replaced-by #'update-codomain
+       :doc "Colloquial term for transforming the codomain."} update-values
+  update-codomain)
 
 (defn map-vals-with-keys
   "Create a new map from m by calling function f, with two
