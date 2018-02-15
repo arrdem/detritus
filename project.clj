@@ -10,12 +10,6 @@
             [me.arrdem/lein-auto "0.1.4"]
             [lein-cljfmt "0.5.7"]]
 
-  :release-tasks [["vcs" "assert-committed"]
-                  ["update-in" ":version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "tag"]
-                  ["vcs" "push"]
-                  ["deploy"]]
-
   :git-version
   {:status-to-version
    (fn [{:keys [tag version branch ahead ahead? dirty?] :as git}]
