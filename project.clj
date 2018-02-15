@@ -11,7 +11,7 @@
             [lein-cljfmt "0.5.7"]]
 
   :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["update-in" ":version" "leiningen.release/bump-version" "release"]
                   ["vcs" "tag"]
                   ["vcs" "push"]
                   ["deploy"]]
