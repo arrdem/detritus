@@ -2,7 +2,6 @@
   "A collection of helper functions useful for updating and
   conditionally updating datastructures.")
 
-
 ;; Mapping update operations
 ;;--------------------------------------------------------------------
 
@@ -13,8 +12,8 @@
   keys of m to (apply f (get m k) args)."
   [m f & args]
   (->> (for [[k v] m]
-       [k (apply f v args)])
-     (into {})))
+         [k (apply f v args)])
+       (into {})))
 
 (defn map-entry [x y]
   [x y])
@@ -87,36 +86,8 @@
       (apply f x args)
       x)))
 
-(defn take-when
-  "Helper useful for parsing regular function argument seqeunces. If a predicate
-  is satisfied, returns a pair [(first col), (rest col)] otherwise returns the pair
-  [empty, col].
-
-  Ex. (let [[?docstring args] (take-when string? \"\" args)
-            [?attr-map  args] (take-when map? {} args)]
-        ..)"
-  [f empty col]
-  (let [[x & rest] col]
-    (if (f x) [x rest] [empty col])))
-
-(defn lazy-group-by-p [pred coll]
-  ((juxt (partial filter pred)
-         (partial filter (complement pred)))
-   coll))
-
-(defn group-by-p [pred coll]
-  (loop [[head & tail] coll
-         t             []
-         f             []]
-    (let [[t* f*] (if (pred head)
-                    [(conj t head) f]
-                    [t (conj f head)])]
-      (if tail
-        (recur tail t* f*)
-        [t* f*]))))
-
 (defn deep-merge
-  ""
+  "A recursive map merge."
   [v & vs]
   (letfn [(rec-merge [v1 v2]
             (if (and (map? v1) (map? v2))

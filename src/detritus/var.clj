@@ -5,11 +5,11 @@
 
 (defn var->ns [v]
   {:pre [(var? v)]}
-  (-> v (.ns) ns-name))
+  (some-> v (.ns) ns-name))
 
 (defn var->sym [v]
   {:pre [(var? v)]}
-  (-> v (.sym)))
+  (some-> v (.sym)))
 
 (defn macro? [v]
   {:pre [(var? v)]}

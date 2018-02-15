@@ -1,6 +1,5 @@
-(ns detritus.pred
-  "A collection of predicates and predicate helpers."
-  (:require [detritus.types :as t]))
+(ns detritus.threading
+  "A collection of threading macro helpers.")
 
 (defn ->assert
   "(λ T → ((λ T) → Bool)) → T
@@ -39,22 +38,3 @@
   ([pred error v]
    (if (pred v) v
        (assert false error))))
-
-(def ! complement)
-
-;; Missing type predicates
-;;--------------------------------------------------------------------
-
-(defn seqable?
-  {:depricated  "0.3.1"
-   :replaced-by t/seqable?}
-  [x]
-  (.write *err* "Calling deprecated detritus.pred/seqable?\n")
-  (t/seqable? x))
-
-(defn atom?
-  {:depricated  "0.3.1"
-   :replaced-by t/atom?}
-  [x]
-  (.write *err* "Calling deprecated detritus.pred/atom?\n")
-  (t/atom? x))

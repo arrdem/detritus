@@ -1,8 +1,7 @@
 (ns detritus.types
-  (:refer-clojure :exclude [map-entry?]))
+  "Type predicates, some of which are in core and some of which aren't."
+  (:refer-clojure :exclude [map-entry? uuid? uri? int? seqable? boolean?]))
 
-;; Concrete type predicates
-;;--------------------------------------------------------------------
 (defn atom? [x]
   (instance? clojure.lang.Atom x))
 
@@ -15,20 +14,20 @@
 (defn pattern? [x]
   (instance? java.util.regex.Pattern x))
 
-(defn uuid? [x]
-  (instance? java.util.UUID x))
+(def ^:deprecated uuid?
+  #'clojure.core/uuid?)
 
 (defn uri? [x]
   (instance? java.net.URI x))
 
-(defn boolean? [x]
-  (instance? java.lang.Boolean x))
+(def ^:deprecated boolean?
+  #'clojure.core/boolean?)
 
 (defn long? [x]
   (instance? java.lang.Long x))
 
-(defn int? [x]
-  (instance? java.lang.Integer x))
+(def ^:deprecated int?
+  #'clojure.core/int?)
 
 (defn big-int? [x]
   (or (instance? java.math.BigInteger x)
@@ -37,8 +36,6 @@
 (defn file? [x]
   (instance? java.io.File x))
 
-;; Interface predicates
-;;--------------------------------------------------------------------
 (defn ref? [x]
   (instance? clojure.lang.IRef x))
 

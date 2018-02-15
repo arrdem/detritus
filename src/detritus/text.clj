@@ -1,12 +1,12 @@
 (ns detritus.text
   (:require [detritus.macros :refer [-<>]])
-  (:require [clojure.string :as c.s]))
+  (:require [clojure.string :as str]))
 
 (defn words [text]
-  (c.s/split text #"\s+"))
+  (str/split text #"\s+"))
 
 (defn lines [text]
-  (c.s/split text #"(\n\r?)+"))
+  (str/split text #"(\n\r?)+"))
 
 (defn trailing-newline?
   [text]
@@ -96,13 +96,13 @@
 
 (defmethod render :wrap
   [[_ {width :width
-       :or {width 80}
-       :as opts}
+       :or   {width 80}
+       :as   opts}
     & text]]
   (-<> text
        (map render <>)
        (apply str <>)
-       (c.s/replace <> #"\n" "")
+       (str/replace <> #"\n" "")
        (wrap-lines width <>)
        (interpose "\n" <>)
        (apply str <>)))
@@ -137,13 +137,13 @@
   (let [indent (re-find #"\s\s+" text)]
     (if indent
       [:indent {:width (count indent)}
-       (c.s/replace text (re-pattern indent) " ")]
+       (str/replace text (re-pattern indent) " ")]
       [:str {} text])))
 
 (defn text->paragraph
   [text]
   (let [[op w text] (text->indent text)
-        text        (c.s/replace text #"\n\r?" " ")]
+        text        (str/replace text #"\n\r?" " ")]
     [:block {}
      (case op
        (:indent)
@@ -161,7 +161,7 @@
   individual paragraphs."
   [text]
   (map text->paragraph
-       (c.s/split text #"\n\r?\s*\n\r?")))
+       (str/split text #"\n\r?\s*\n\r?")))
 
 ;; API for manipulating text ASTs
 ;;--------------------------------------------------------------------
