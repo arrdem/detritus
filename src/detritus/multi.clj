@@ -14,7 +14,7 @@
   [x]
   (:type x (clojure.core/type x)))
 
-(defn make-prefix-dispatch
+(def make-prefix-dispatch
   "Make a function which dispatches on the `#'type` tuple of the first N arguments, silently absorbing
   the rest."
   (fn [n]

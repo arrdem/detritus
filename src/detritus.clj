@@ -82,3 +82,12 @@
   [& args]
   (binding [*out* *err*]
     (apply prn args)))
+
+(defmacro none [& forms]
+  `(and ~@(map #(list `not %) forms)))
+
+(defmacro xor [& forms]
+  `(or ~@(for [[f forms] (map vector forms (repeat forms))]
+           (cons `and
+                 (for [f* forms]
+                   (if (= f f*) f (list `not f*)))))))
