@@ -13,7 +13,7 @@
 (s/def ::field-spec
   (s/cat :field symbol?
          :turnstyle #{:- :?}
-         :spec (some-fn qualified-ident? ifn?)))
+         :spec (complement #{:- :?})))
 
 (s/def ::fields
   (s/and vector?
